@@ -1,4 +1,3 @@
-
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
@@ -435,7 +434,7 @@ async function handlePublicCheckout(request, db, env) {
     ).bind(subId2, customer2.id, plan.id, now, periodEnd).run();
     await db.prepare(
       `INSERT INTO invoices (id, customer_id, subscription_id, amount, status, description, paid_at) VALUES (?, ?, ?, 0, 'paid', ?, ?)`
-    ).bind(`inv_${uid()}`, customer2.id, subId2, `${plan.name} — Free`, now).run();
+    ).bind(`inv_${uid()}`, customer2.id, subId2, `${plan.name} \u2014 Free`, now).run();
     await logEvent(db, "subscription.created", customer2.id, "subscription", subId2, { plan: plan.slug, source: "public-checkout" });
     return json({ subscription_id: subId2, plan: plan.slug, status: "active", message: "Welcome to BlackRoad! You belong here." });
   }
@@ -494,7 +493,7 @@ async function handleSubscribe(request, db, env) {
     await db.prepare(
       `INSERT INTO invoices (id, customer_id, subscription_id, amount, status, description, paid_at)
        VALUES (?, ?, ?, 0, 'paid', ?, ?)`
-    ).bind(`inv_${uid()}`, customer_id, subId2, `${plan.name} — Free`, now).run();
+    ).bind(`inv_${uid()}`, customer_id, subId2, `${plan.name} \u2014 Free`, now).run();
     await logEvent(db, "subscription.created", customer_id, "subscription", subId2, { plan: plan.slug });
     return json({ subscription_id: subId2, plan: plan.slug, status: "active" });
   }
@@ -885,7 +884,7 @@ async function handleUpgrade(request, db, env) {
     });
     return json({ subscription_id: currentSub.id, plan: newPlan.slug, status: "active", prorated: true });
   }
-  return err("Cannot upgrade — no active Stripe subscription", 400);
+  return err("Cannot upgrade \u2014 no active Stripe subscription", 400);
 }
 __name(handleUpgrade, "handleUpgrade");
 __name2(handleUpgrade, "handleUpgrade");
@@ -895,16 +894,16 @@ function handleLandingPage() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RoadPay — Pricing &amp; Plans | BlackRoad OS</title>
+  <title>RoadPay \u2014 Pricing &amp; Plans | BlackRoad OS</title>
   <link rel="icon" type="image/x-icon" href="https://images.blackroad.io/brand/favicon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="https://images.blackroad.io/brand/br-square-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="https://images.blackroad.io/brand/apple-touch-icon.png" />
   <meta property="og:image" content="https://images.blackroad.io/brand/blackroad-icon-512.png" />
-  <meta property="og:title" content="RoadPay — Pricing &amp; Plans" />
-  <meta property="og:description" content="Choose your plan. AI agents, fleet tools, and full API access — starting free." />
+  <meta property="og:title" content="RoadPay \u2014 Pricing &amp; Plans" />
+  <meta property="og:description" content="Choose your plan. AI agents, fleet tools, and full API access \u2014 starting free." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <meta name="description" content="RoadPay pricing plans and add-ons. AI agents, fleet management, and full API access — starting free." />
+  <meta name="description" content="RoadPay pricing plans and add-ons. AI agents, fleet management, and full API access \u2014 starting free." />
   <link rel="canonical" href="https://pay.blackroad.io/">
   <meta name="robots" content="index, follow">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"RoadPay","url":"https://pay.blackroad.io","applicationCategory":"FinanceApplication","operatingSystem":"Web","description":"BlackRoad OS pricing, plans, and payment processing","author":{"@type":"Organization","name":"BlackRoad OS, Inc."}}<\/script>
@@ -961,7 +960,7 @@ function handleLandingPage() {
     .plan-period { font-family:var(--jb); font-size:12px; opacity:.3; margin-bottom:24px; }
     .plan-features { list-style:none; flex:1; margin-bottom:24px; }
     .plan-features li { padding:8px 0; font-size:14px; opacity:.55; border-bottom:1px solid rgba(255,255,255,.04); display:flex; align-items:center; gap:8px; }
-    .plan-features li::before { content:'\2713'; color:#f5f5f5; font-size:12px; flex-shrink:0; }
+    .plan-features li::before { content:'\\2713'; color:#f5f5f5; font-size:12px; flex-shrink:0; }
     .plan-cta { display:block; text-align:center; padding:14px 24px; border-radius:12px; color:#fff; text-decoration:none; font-weight:600; font-size:14px; transition:all .3s; border:1px solid rgba(255,255,255,.15); }
     .plan-cta:hover { border-color:#FF2255; background:rgba(255,34,85,.1); transform:translateY(-1px); }
     .plan-cta.primary { background:var(--g); border:none; color:#000; font-weight:700; }
@@ -1061,7 +1060,7 @@ function handleLandingPage() {
         <li>Custom dashboards</li>
         <li>Webhook integrations</li>
       </ul>
-      <button class="plan-cta primary" onclick="openCheckout('rider','Sovereign','$29/mo')">Subscribe — $29/mo</button>
+      <button class="plan-cta primary" onclick="openCheckout('rider','Sovereign','$29/mo')">Subscribe \u2014 $29/mo</button>
     </div>
     <div class="plan-card gradient-border">
       <div class="plan-name">Enterprise</div>
@@ -1077,7 +1076,7 @@ function handleLandingPage() {
         <li>Priority inference</li>
         <li>Custom models</li>
       </ul>
-      <button class="plan-cta" onclick="openCheckout('paver','Enterprise','$99/mo')">Subscribe — $99/mo</button>
+      <button class="plan-cta" onclick="openCheckout('paver','Enterprise','$99/mo')">Subscribe \u2014 $99/mo</button>
     </div>
     <div class="plan-card gradient-border">
       <div class="plan-name">Enterprise</div>
@@ -1197,11 +1196,11 @@ let currentPlanSlug = '';
 function openCheckout(slug, name, price) {
   currentPlanSlug = slug;
   document.getElementById('checkoutTitle').textContent = name;
-  document.getElementById('checkoutPlan').textContent = price === 'Free' ? 'Free forever' : price + ' — cancel anytime';
+  document.getElementById('checkoutPlan').textContent = price === 'Free' ? 'Free forever' : price + ' \u2014 cancel anytime';
   document.getElementById('checkoutEmail').value = '';
   document.getElementById('checkoutMsg').style.display = 'none';
   document.getElementById('checkoutErr').style.display = 'none';
-  document.getElementById('checkoutBtn').textContent = price === 'Free' ? 'Get Started — Free' : 'Continue to Payment';
+  document.getElementById('checkoutBtn').textContent = price === 'Free' ? 'Get Started \u2014 Free' : 'Continue to Payment';
   document.getElementById('checkoutOverlay').classList.add('active');
   setTimeout(() => document.getElementById('checkoutEmail').focus(), 100);
 }
@@ -1406,7 +1405,7 @@ var worker_default = {
     }
     const clientIp = request.headers.get("cf-connecting-ip") || "unknown";
     if (!rateLimit(clientIp)) {
-      return addHeaders(err("Too many requests — slow down", 429), cors);
+      return addHeaders(err("Too many requests \u2014 slow down", 429), cors);
     }
     const db = env.DB;
     let response;
@@ -1428,7 +1427,7 @@ var worker_default = {
       if (path === "/checkout" && request.method === "POST") return addHeaders(await handlePublicCheckout(request, db, env), cors);
       const user = await authenticate(request, env);
       if (!user) {
-        return addHeaders(err("Unauthorized — provide Bearer token or X-RoadPay-Key", 401), cors);
+        return addHeaders(err("Unauthorized \u2014 provide Bearer token or X-RoadPay-Key", 401), cors);
       }
       switch (true) {
         case path === "/customers":
