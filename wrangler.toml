@@ -1,0 +1,6 @@
+name = "roadpay"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+routes = [
+  { pattern = "pay.blackroad.io/*", custom_domain = true }
+]
